@@ -1,7 +1,7 @@
 #version 330 core
 
-in vec3 vPos;
-in vec3 vCol;
+layout (location = 0) in vec3 vPos;
+layout (location = 1) in vec3 vCol;
 out vec3 color;
 
 uniform mat4 MVP;
