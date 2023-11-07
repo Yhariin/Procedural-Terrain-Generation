@@ -2,6 +2,7 @@
 *.d
 
 # Compiled Object files
+build/*
 *.slo
 *.lo
 *.o
@@ -30,3 +31,15 @@
 *.exe
 *.out
 *.app
+
+# VSCode 
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+.vscode
+.history/
+
+
