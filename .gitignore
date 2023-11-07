@@ -3,6 +3,7 @@
 
 # Compiled Object files
 build/*
+!build/.gitkeep
 *.slo
 *.lo
 *.o
