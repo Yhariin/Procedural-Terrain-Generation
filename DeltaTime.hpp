@@ -1,5 +1,8 @@
 #pragma once
 
+#define NS_PER_SECOND (1000000000)
+#define NS_PER_MS (1000000)
+
 class DeltaTime
 {
     public:

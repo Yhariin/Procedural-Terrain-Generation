@@ -10,6 +10,7 @@ Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch) :
     WorldUp = up;
     Yaw = yaw;
     Pitch = pitch;
+    firstMouse = true;
     updateCameraVectors();
 
 }
@@ -52,6 +53,10 @@ void Camera::ProcessKeyboard(Camera_Movement direction, float deltaTime)
         Position -= Right * velocity;
     if (direction == RIGHT)
         Position += Right * velocity;
+    if (direction == UP)
+        Position += Up * velocity;
+    if (direction == DOWN)
+        Position -= Up * velocity;
 }
 
 void Camera::ProcessMouseMovement(float x_offset, float y_offset, bool constrainPitch)

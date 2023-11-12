@@ -11,7 +11,9 @@ enum Camera_Movement
     FORWARD,
     BACKWARD,
     LEFT,
-    RIGHT
+    RIGHT,
+    UP,
+    DOWN
 };
 
 const float YAW = -90.f;
@@ -23,6 +25,13 @@ const float ZOOM = 45.0f;
 class Camera
 {
     public:
+        // Additionals
+        bool firstMouse;
+        float lastX;
+        float lastY;
+        float fov;
+
+
         // Camera Attributes
         glm::vec3 Position;
         glm::vec3 Front;

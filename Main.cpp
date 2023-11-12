@@ -10,6 +10,7 @@
 #include <glm/gtx/normal.hpp>
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/string_cast.hpp>
  
 #include "Renderer.hpp"
 
@@ -18,16 +19,31 @@
 #include "IndexBuffer.hpp"
 
 #include "Shader.hpp"
+#include "Camera.hpp"
 #include "DeltaTime.hpp" 
+#include "Window.hpp"
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <iostream>
 
-#define WIDTH 1280
-#define HEIGHT 720
+const uint32_t WIDTH = 1280;
+const uint32_t HEIGHT = 720;
+const uint32_t POS_X = 500;
+const uint32_t POS_Y = 300;
 
 using std::cout, std::endl;
+
+int main(void)
+{
+    Window::Init_Window("Procedural Terrain Generation", WIDTH, HEIGHT, POS_X, POS_Y);
+
+    Window::WindowLoop();
+
+    return EXIT_SUCCESS;
+}
+/*
+void processInput(GLFWwindow *window, Camera &camera, float deltaTime);
 
 float vertices [] = {
     -0.6f, -0.4f, 0.5f,      1.f, 0.f, 0.f,
@@ -91,10 +107,51 @@ static void computeVertexProperties(VertexProperties &vertexProperties)
     vertexProperties.stride = (vertexProperties.size_pos + vertexProperties.size_color) * 4;
 }
 
+void processInput(GLFWwindow *window, Camera &camera, float deltaTime)
+{
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, true);
+
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        camera.ProcessKeyboard(FORWARD, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        camera.ProcessKeyboard(BACKWARD, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        camera.ProcessKeyboard(LEFT, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        camera.ProcessKeyboard(RIGHT, deltaTime);
+}
+*/
+
+
+// void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
+// {
+//     float xpos = static_cast<float>(xposIn);
+//     float ypos = static_cast<float>(yposIn);
+
+//     if (firstMouse)
+//     {
+//         lastX = xpos;
+//         lastY = ypos;
+//         firstMouse = false;
+//     }
+
+//     float xoffset = xpos - lastX;
+//     float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+
+//     lastX = xpos;
+//     lastY = ypos;
+
+//     camera.ProcessMouseMovement(xoffset, yoffset);
+// }
+// Window window("title", 4, 4);
+/*
 int main(void)
 {
     DeltaTime deltaTime;
     float lastFrameTime = 0.0f;
+
+    Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
     VertexProperties vertexProperties;
     computeVertexProperties(vertexProperties);
@@ -103,7 +160,6 @@ int main(void)
     // cout << "(" << triangleNormal.x << ", " << triangleNormal.y << ", " << triangleNormal.z << ")" << endl; 
 
     GLFWwindow* window;
-    int mvp_location;
  
     glfwSetErrorCallback(error_callback);
  
@@ -151,16 +207,9 @@ int main(void)
     IndexBuffer quad_ib(quad_indices, sizeof(quad_indices) / sizeof(unsigned int));
     quad_ib.Bind();
 
-    // mvp_location = glGetUniformLocation(shader.getProgramID(), "MVP");
  
     Renderer renderer;
 
-
-    glm::ivec2 resolution = glm::ivec2(WIDTH, HEIGHT);
-
-    int resolutionX = WIDTH;
-    int resolutionY = HEIGHT;
-    
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -176,6 +225,8 @@ int main(void)
         
         lastFrameTime = currentFrameTime;
 
+        // Input
+        processInput(window, camera, deltaTime);
 
 
         glClearColor(0.f, 0.f, 0.f, 1.f);
@@ -199,13 +250,20 @@ int main(void)
         //TODO: learn model, view, and projection matrices properly
         //TODO: learn the order in which to multiply matrices
         glm::mat4 m(1.0f);
+        glm::mat4 v(1.0f);
         glm::mat4 p(1.0f);
 
         m = glm::rotate(m, (float) glfwGetTime(), glm::vec3(0.f, 0.f, 1.0f));
-        p = glm::ortho(-ratio, ratio, -1.f, 1.f, 1.f, -1.f);
+        // p = glm::ortho(-ratio, ratio, -1.f, 1.f, 1.f, -1.f);
+        v = camera.GetViewMatrix();
+        p = glm::perspective(glm::radians(camera.Zoom), ratio, 0.1f, 100.0f);
 
-        glm::mat4 mvp = p * m;
+        // Order of matrix multiplication is reversed (read from right to left)
+        // When creating the transformation matrix do, scaling -> rotations -> transformations
+        // clip_vector = projection_matrix * view_matrix * transformation_matrix * local_vector
+        glm::mat4 mvp =  p * v * m;
 
+        
         shader.setMat4fv("MVP", mvp);
         
         renderer.Draw(va, ib, shader);
@@ -230,3 +288,4 @@ int main(void)
     glfwTerminate();
     exit(EXIT_SUCCESS);
 }
+*/
