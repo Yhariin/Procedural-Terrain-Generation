@@ -13,6 +13,7 @@ void Window::Init_Window(const std::string& title, uint32_t width, uint32_t heig
     WindowProperties m_WindowProperties(title, width, height, posX, posY);
 
     m_WindowProperties.isFullscreen = false;
+    m_WindowProperties.wireframeEnabled = false;
 
     glfwSetErrorCallback(error_callback);
 
@@ -128,13 +129,19 @@ void Window::key_callback(GLFWwindow* window, int key, int scancode, int action,
         }
 
     }
-    if (key == GLFW_KEY_LEFT_BRACKET && action == GLFW_PRESS)
+    if (key == GLFW_KEY_F2 && action == GLFW_PRESS)
     {
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    }
-    if (key == GLFW_KEY_RIGHT_BRACKET&& action == GLFW_PRESS)
-    {
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        if(m_WindowProperties.wireframeEnabled)
+        {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            m_WindowProperties.wireframeEnabled = false;
+        }
+        else
+        {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            m_WindowProperties.wireframeEnabled = true;
+        }
+
     }
 
 }

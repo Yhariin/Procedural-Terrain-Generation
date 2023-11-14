@@ -17,6 +17,7 @@ struct WindowProperties
     uint32_t posY;
 
     bool isFullscreen;
+    bool wireframeEnabled;
     uint32_t prevWidth;
     uint32_t prevHeight;
 
