@@ -128,6 +128,14 @@ void Window::key_callback(GLFWwindow* window, int key, int scancode, int action,
         }
 
     }
+    if (key == GLFW_KEY_LEFT_BRACKET && action == GLFW_PRESS)
+    {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    }
+    if (key == GLFW_KEY_RIGHT_BRACKET&& action == GLFW_PRESS)
+    {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    }
 
 }
 

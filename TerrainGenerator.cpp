@@ -1,5 +1,6 @@
 #include "TerrainGenerator.hpp"
 #include <iostream>
+
 void TerrainGenerator::computeVertexProperties(VertexProperties &vertexProperties, std::vector<float> &vertices)
 {
     // vertexProperties.obj = vertices_t;
@@ -19,6 +20,7 @@ void TerrainGenerator::computeVertexProperties(VertexProperties &vertexPropertie
 
 TerrainGenerator::TerrainGenerator() 
 {
+    /*
     m_Vertices = {
         -0.6f, -0.4f, 0.5f,      1.f, 0.f, 0.f,
          0.6f, -0.4f, 0.5f,      0.f, 1.f, 0.f,
@@ -31,6 +33,8 @@ TerrainGenerator::TerrainGenerator()
     m_Indices = {
         0, 1, 2, 0, 4, 5, 6
     };
+    */
+    GenerateChunk(64);
 
     computeVertexProperties(m_VertexProperties, m_Vertices);
     m_VertexBufferLayout.Push<float>(m_VertexProperties.size_pos);
@@ -39,5 +43,42 @@ TerrainGenerator::TerrainGenerator()
 
 TerrainGenerator::~TerrainGenerator()
 {
+
+}
+
+void TerrainGenerator::GenerateChunk(int resolution)
+{
+    float factor = 100.f / (float)(resolution - 1);
+
+    
+    for(int r = 0; r < resolution; ++r) //y
+    {
+        for(int c = 0; c < resolution; ++c) //x
+        {
+            m_Vertices.push_back(c); // X
+            m_Vertices.push_back(glm::linearRand(0.f, 1.0f)); // Y (random)
+            m_Vertices.push_back(r); // Z
+
+            m_Vertices.push_back(glm::linearRand(0.f, 1.0f)); // R
+            m_Vertices.push_back(glm::linearRand(0.f, 1.0f)); // G
+            m_Vertices.push_back(glm::linearRand(0.f, 1.0f)); // B
+
+
+        }
+
+
+    }
+
+
+    for(int i = 0; i < resolution - 1; ++i)
+    {
+        for(int j = 0; j < resolution; ++j)
+        {
+            m_Indices.push_back((i+1) * resolution + j);
+            m_Indices.push_back(i * resolution + j);
+
+        }
+
+    }
 
 }

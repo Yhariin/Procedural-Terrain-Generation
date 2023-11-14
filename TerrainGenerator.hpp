@@ -1,6 +1,7 @@
 #pragma once
 
 #include "gfx.hpp"
+#include "glm/gtc/random.hpp"
 #include "VertexBufferLayout.hpp"
 #include <vector>
 
@@ -35,5 +36,6 @@ class TerrainGenerator
         VertexBufferLayout m_VertexBufferLayout;
 
         void computeVertexProperties(VertexProperties &VertexProperties, std::vector<float> &vertices);
+        void GenerateChunk(int resolution);
 
 };

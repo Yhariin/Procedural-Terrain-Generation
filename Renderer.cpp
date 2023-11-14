@@ -25,7 +25,13 @@ void Renderer::Draw()
     m_vao.Bind();
     m_ibo.Bind();
 
-    glDrawElements(GL_TRIANGLES, m_ibo.GetCount(), GL_UNSIGNED_INT, nullptr);
+    // glDrawArrays(GL_TRIANGLE_STRIP, 0, m_ibo.GetCount());
+    glDrawElements(GL_TRIANGLE_STRIP, m_ibo.GetCount(), GL_UNSIGNED_INT, nullptr);
+    // for(int i = 0; i < 64 - 1; ++i)
+    // {
+    //     glDrawElements(GL_TRIANGLE_STRIP, 2 * 64, GL_UNSIGNED_INT, (char*)0 + i * 64 * 2);
+
+    // }
 
 }
 
@@ -37,7 +43,6 @@ void Renderer::Draw(const VertexArray& va, const IndexBuffer& ib, Shader& shader
 
     // UpdateCamera(shader);
 
-    glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, nullptr);
 }
 
 void Renderer::Clear() const
@@ -55,7 +60,8 @@ void Renderer::Update()
     glm::mat4 v(1.0f);
     glm::mat4 p(1.0f);
 
-    m = glm::rotate(m, (float) glfwGetTime(), glm::vec3(0.f, 0.f, 1.0f));
+    // m = glm::rotate(m, (float) glfwGetTime(), glm::vec3(0.f, 0.f, 1.0f));
+    m = glm::translate(m, glm::vec3(-32.f, -2.f, -32.f));
     v = m_Camera.GetViewMatrix();
     // p = glm::ortho(-ratio, ratio, -1.f, 1.f, 1.f, -1.f);
     p = glm::perspective(glm::radians(45.f), ratio, 0.1f, 100.0f);
@@ -67,6 +73,12 @@ void Renderer::Update()
     glm::mat4 mvp =  p * v * m;
 
     m_shader.setMat4fv("MVP", mvp);
+
+    // Lighting
+
+    glm::vec3 lightPos(0.f, 10.f, 0.f);
+
+
 }
 
 void Renderer::UpdateCamera(Shader& shader)
