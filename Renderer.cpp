@@ -3,7 +3,7 @@
 
 Renderer::Renderer(uint32_t width, uint32_t height) : 
     m_TerrainGenerator(),
-    m_Camera(glm::vec3(0.0f, 0.0f, 3.0f)), 
+    m_Camera(glm::vec3(0.0f, 15.0f, 3.0f)), 
     m_shader("shaders/vert.glsl", "shaders/frag.glsl"),
     m_vao(),
     m_vbo(m_TerrainGenerator.getVertices().data(), m_TerrainGenerator.getVertices().size() * sizeof(float)),
@@ -25,13 +25,10 @@ void Renderer::Draw()
     m_vao.Bind();
     m_ibo.Bind();
 
-    // glDrawArrays(GL_TRIANGLE_STRIP, 0, m_ibo.GetCount());
+    glEnable(GL_PRIMITIVE_RESTART);
+    glPrimitiveRestartIndex(RESTART_INDEX);
     glDrawElements(GL_TRIANGLE_STRIP, m_ibo.GetCount(), GL_UNSIGNED_INT, nullptr);
-    // for(int i = 0; i < 64 - 1; ++i)
-    // {
-    //     glDrawElements(GL_TRIANGLE_STRIP, 2 * 64, GL_UNSIGNED_INT, (char*)0 + i * 64 * 2);
-
-    // }
+    glDisable(GL_PRIMITIVE_RESTART);
 
 }
 
@@ -61,7 +58,7 @@ void Renderer::Update()
     glm::mat4 p(1.0f);
 
     // m = glm::rotate(m, (float) glfwGetTime(), glm::vec3(0.f, 0.f, 1.0f));
-    m = glm::translate(m, glm::vec3(-32.f, -2.f, -32.f));
+    m = glm::translate(m, glm::vec3(-32.f, 0.f, -32.f));
     v = m_Camera.GetViewMatrix();
     // p = glm::ortho(-ratio, ratio, -1.f, 1.f, 1.f, -1.f);
     p = glm::perspective(glm::radians(45.f), ratio, 0.1f, 100.0f);

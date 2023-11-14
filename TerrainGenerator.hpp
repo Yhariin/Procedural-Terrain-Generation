@@ -3,6 +3,7 @@
 #include "gfx.hpp"
 #include "glm/gtc/random.hpp"
 #include "VertexBufferLayout.hpp"
+#include "Utils.hpp"
 #include <vector>
 
 typedef struct VertexProperties {

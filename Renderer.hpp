@@ -6,6 +6,7 @@
 #include "Shader.hpp"
 #include "Camera.hpp"
 #include "TerrainGenerator.hpp"
+#include "Utils.hpp"
 
 class Renderer
 {

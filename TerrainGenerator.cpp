@@ -1,6 +1,7 @@
 #include "TerrainGenerator.hpp"
 #include <iostream>
 
+
 void TerrainGenerator::computeVertexProperties(VertexProperties &vertexProperties, std::vector<float> &vertices)
 {
     // vertexProperties.obj = vertices_t;
@@ -49,19 +50,23 @@ TerrainGenerator::~TerrainGenerator()
 void TerrainGenerator::GenerateChunk(int resolution)
 {
     float factor = 100.f / (float)(resolution - 1);
+    float peak = 5.0f;
 
     
     for(int r = 0; r < resolution; ++r) //y
     {
         for(int c = 0; c < resolution; ++c) //x
         {
+            float y = glm::linearRand(0.f, peak);
+            float normY = y / peak;
+
             m_Vertices.push_back(c); // X
-            m_Vertices.push_back(glm::linearRand(0.f, 1.0f)); // Y (random)
+            m_Vertices.push_back(y); // Y (random)
             m_Vertices.push_back(r); // Z
 
-            m_Vertices.push_back(glm::linearRand(0.f, 1.0f)); // R
-            m_Vertices.push_back(glm::linearRand(0.f, 1.0f)); // G
-            m_Vertices.push_back(glm::linearRand(0.f, 1.0f)); // B
+            m_Vertices.push_back(normY * 0.5f); // R
+            m_Vertices.push_back(normY * 0.25f); // G
+            m_Vertices.push_back(normY); // B
 
 
         }
@@ -78,6 +83,7 @@ void TerrainGenerator::GenerateChunk(int resolution)
             m_Indices.push_back(i * resolution + j);
 
         }
+        m_Indices.push_back(RESTART_INDEX);
 
     }
 
