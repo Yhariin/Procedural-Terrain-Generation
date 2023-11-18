@@ -70,6 +70,7 @@ void Renderer::Update()
     glm::mat4 mvp =  p * v * m;
 
     m_shader.setMat4fv("MVP", mvp);
+    m_shader.setVec3f("light_direction", glm::vec3(-1.0, 0.0, 0));
 
     // Lighting
 

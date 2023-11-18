@@ -6,6 +6,7 @@
 #include <fstream>
 #include <iostream>
 #include <unordered_map>
+#include <vector>
 
 #include <glm/mat4x4.hpp>
 
@@ -27,6 +28,7 @@ class Shader
         void setInt(const std::string &name, int value);
         void setFloat(const std::string &name, float value);
         void setMat4fv(const std::string &name, const glm::mat4& matrix);
+        void setVec3f(const std::string &name, const glm::vec3& vec);
 
         // void Shader::setUniformMatrix4fv(const std::string &name, glm::mat4x4 mat4x4) const;
 
