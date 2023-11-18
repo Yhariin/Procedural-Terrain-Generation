@@ -48,7 +48,11 @@ void Shader::setFloat(const std::string &name, float value)
 void Shader::setMat4fv(const std::string &name, const glm::mat4& matrix)
 {
     glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &matrix[0][0]);
+}
 
+void Shader::setVec3f(const std::string &name, const glm::vec3& vec)
+{
+    glUniform3f(GetUniformLocation(name), vec.x, vec.y, vec.z);
 }
 
 int Shader::GetUniformLocation(const std::string &name)
@@ -78,10 +82,15 @@ GLuint Shader::CompileShader(GLuint type, const std::string &source)
     if(result == GL_FALSE)
     {
         int length;
+        GLint maxLength = 0;
         glGetShaderiv(shaderID, GL_INFO_LOG_LENGTH, &length);
         char* message = (char*)alloca(length * sizeof(char));
+        glGetShaderInfoLog(shaderID, length, &length, message);
         std::cout << "Failed to compile shader!" << std::endl;
         std::cout << message << std::endl;
+
+        glDeleteShader(shaderID);
+        return 0;
 
     }
     
