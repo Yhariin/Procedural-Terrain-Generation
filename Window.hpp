@@ -42,7 +42,7 @@ class Window
     private:
         static GLFWwindow *m_Handle;
         static WindowProperties m_WindowProperties;
-        static float m_currentFrameTime, m_deltaTime, m_lastFrameTime;
+        static float m_CurrentFrameTime, m_DeltaTime, m_LastFrameTime;
 
         static void ProcessInputs(Camera& camera);
         static void ProcessMouse(Camera& camera);

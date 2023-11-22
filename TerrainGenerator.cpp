@@ -4,7 +4,6 @@
 
 void TerrainGenerator::computeVertexProperties(VertexProperties &vertexProperties, std::vector<float> &vertices)
 {
-    // vertexProperties.obj = vertices_t;
     vertexProperties.obj = vertices;
     vertexProperties.obj_count = vertices.size();
     // vertexProperties.obj_count = sizeof(vertices_t) / sizeof(float);
@@ -40,131 +39,150 @@ TerrainGenerator::~TerrainGenerator()
 
 void TerrainGenerator::GenerateChunk(int resolution)
 {
-    float factor = 100.f / (float)(resolution - 1);
-    float peak = 5.0f;
+    m_VerticesVec3.reserve(resolution * resolution);
+    float spacing = 1.0;
+    float peak = 5.f;
 
-    // Vertex Buffer
-    for(int r = 0; r < resolution; ++r) //y
+    // Rows
+    for(int r = 0; r < resolution; ++r)
     {
-        for(int c = 0; c < resolution; ++c) //x
+        // Columns
+        for(int c = 0; c < resolution; ++c)
         {
-            float y = glm::linearRand(0.f, peak);
+            float x = c;
+            float z = r;
+            // float y = glm::linearRand(0.f, peak);
+            float y = glm::perlin(glm::vec2(x * 0.2, z * 0.2)) * peak;
+
             float normY = y / peak;
 
-            m_Vertices.push_back(c); // X
-            m_Vertices.push_back(y); // Y (random)
-            m_Vertices.push_back(r); // Z
+            glm::vec3 v(x * spacing, y * spacing, z * spacing);
+            m_VerticesVec3.emplace_back(v);
 
-            m_Vertices.push_back(normY * 0.5f); // R
-            m_Vertices.push_back(normY * 0.25f); // G
-            m_Vertices.push_back(normY); // B
+            // Vertex Colors
+            // m_VertexColorsVec3.push_back(glm::vec3(normY * 0.5, normY * 0.25, normY));
+            m_VertexColorsVec3.push_back(glm::vec3(0.3, 0.3, 0.3));
 
-            // Vertex Normals
-            m_Vertices.push_back(0.f);
-            m_Vertices.push_back(0.f);
-            m_Vertices.push_back(0.f);
+            // Create a vector in the mapping
+            // To keep track of all the triangles
+            std::vector<int> triangles;
+            m_VertexToTrianglesMap.emplace(m_VerticesVec3.size() - 1, triangles);
 
-            m_Vertices_vec.push_back(glm::vec3(c, y, r));
-            // m_Vertices_vec.push_back(glm::vec3(normY * 0.5f, normY * 0.25f, normY));
 
         }
-
-
     }
 
-    // Index Buffer
-    for(int i = 0; i < resolution - 1; ++i)
+    // Generate Faces
+
+    // Rows (-1 for last)
+    for(int r = 0; r < resolution - 1; ++r)
     {
-        for(int j = 0; j < resolution; ++j)
+        // Columns (-1 for last)
+        for (int c = 0; c < resolution - 1; ++c)
         {
-            m_Indices.push_back((i+1) * resolution + j);
-            m_Indices.push_back(i * resolution + j);
-
-            m_Indices_norm.push_back((i+1) * resolution + j);
-            m_Indices_norm.push_back(i * resolution + j);
-
-        }
-        m_Indices.push_back(RESTART_INDEX);
-
-    }
-
-    // Calculate Normals
-    std::vector<std::list<glm::vec3>> vertex_normals;
-    vertex_normals.reserve(m_Indices.size());
-    for(int i = 0; i < m_Indices.size(); ++i)
-    {
-        std::list<glm::vec3> l;
-        vertex_normals.push_back(l);
-    }
-
-
-    int stride = 3;
-    int xyzCounter = 0;
-    int vertexCounter = 0;
-    int counter = 0;
-    for(int i = 0; i < resolution - 1; ++i)
-    {
-        for(int j = 2; j < resolution * 2; ++j)
-        {
-            // counter = (i * resolution) + j;
-            glm::vec3 A(m_Vertices_vec[m_Indices_norm[counter]]);
-            glm::vec3 B(m_Vertices_vec[m_Indices_norm[counter+1]]);
-            glm::vec3 C(m_Vertices_vec[m_Indices_norm[counter+2]]);
-
-            glm::vec3 normal = glm::triangleNormal(A, B, C);
-
-            vertex_normals[m_Indices_norm[counter]].push_back(normal);
-            vertex_normals[m_Indices_norm[counter+1]].push_back(normal);
-            vertex_normals[m_Indices_norm[counter+2]].push_back(normal);
-            counter++;
+            // Upper triangle
             /*
-            glm::vec3 A(m_Vertices[xyzCounter + (m_Indices[vertexCounter] * stride)], m_Vertices[(xyzCounter+1) + (m_Indices[vertexCounter] * stride)], m_Vertices[(xyzCounter+2) + (m_Indices[vertexCounter] * stride)]);
-            xyzCounter += stride;
-            vertexCounter++;
-            glm::vec3 B(m_Vertices[xyzCounter + (vertexCounter * stride)], m_Vertices[(xyzCounter+1) + (vertexCounter * stride)], m_Vertices[(xyzCounter+2) + (vertexCounter * stride)]);
-            xyzCounter += stride;
-            vertexCounter++;
-            glm::vec3 C(m_Vertices[xyzCounter + (vertexCounter * stride)], m_Vertices[(xyzCounter+1) + (vertexCounter * stride)], m_Vertices[(xyzCounter+2) + (vertexCounter * stride)]);
-
-            glm::triangleNormal(A, B, C);
-
-            xyzCounter -= (stride * 2) + 1;
-            vertexCounter--;
+                v0 -- v2
+                |    /
+                |  /
+                v1
             */
-        }
-        counter +=2;
+            int f0_0 = (r * resolution) + c;
+            int f0_1 = ((r + 1) * resolution) + c;
+            int f0_2 = (r * resolution) + c + 1;
+            
+            glm::vec3 f0(f0_0, f0_1, f0_2);
+            m_Triangles.push_back(f0);
 
+            // Lower triangle
+            /*
+                      v2
+                     / |
+                   /   |
+                v0 --- v1
+            */
+           int f1_0 = ((r + 1) * resolution) + c;
+           int f1_1 = ((r + 1) * resolution) + c + 1;
+           int f1_2 = (r * resolution) + c + 1;
+
+           glm::vec3 f1(f1_0, f1_1, f1_2);
+           m_Triangles.push_back(f1);
+        }
     }
 
-    std::vector<glm::vec3> vertex_normals_average;
+    prepareVectors();
 
-    for(int i = 0; i < m_Indices.size(); ++i)
+    setVectorsAndBuffers();
+
+}
+
+void TerrainGenerator::prepareVectors()
+{
+
+    // Compute triangle normals
+    m_TriangleNormals.reserve(m_Triangles.size());
+    for(int i = 0; i < m_Triangles.size(); ++i)
     {
-        int count = 0;
-        glm::vec3 sum(0, 0, 0);
-        for(const auto& vec : vertex_normals[i])
+        int v0i = m_Triangles[i].x;
+        int v1i = m_Triangles[i].y;
+        int v2i = m_Triangles[i].z;
+        
+        // Link vertex to triangle
+        m_VertexToTrianglesMap.at(v0i).push_back(i);
+        m_VertexToTrianglesMap.at(v1i).push_back(i);
+        m_VertexToTrianglesMap.at(v2i).push_back(i);
+
+        glm::vec3 v0 = m_VerticesVec3[v0i];
+        glm::vec3 v1 = m_VerticesVec3[v1i];
+        glm::vec3 v2 = m_VerticesVec3[v2i];
+        glm::vec3 tn = glm::triangleNormal(v0, v1, v2);
+        m_TriangleNormals.emplace_back(tn);
+    }
+
+    // Compute vertex normals
+    m_VertexNormals.reserve(m_VerticesVec3.size());
+    for(int i = 0; i < m_VerticesVec3.size(); ++i)
+    {
+        std::vector<int> triangle_indices = m_VertexToTrianglesMap[i];
+        glm::vec3 v_sum = glm::vec3(0.0f);
+
+        for(int j : triangle_indices)
         {
-            sum += vec;
-            count++;
-
+            v_sum = v_sum + m_TriangleNormals[j];
         }
-        // for(std::list<glm::vec3>::iterator it = vertex_normals[i].begin(); it != vertex_normals[i].end(); ++it)
-        // {
-        //     it;
 
-        //     count++;
-        // }
-        vertex_normals_average.push_back(sum / (float)count);
+        v_sum = glm::normalize(v_sum);
+        m_VertexNormals.emplace_back(v_sum);
     }
 
-    stride = 6;
-    m_Vertices[6] = vertex_normals_average[0].x;
-    m_Vertices[7] = vertex_normals_average[0].y;
-    m_Vertices[8] = vertex_normals_average[0].z;
-    for(int i = 1; i < resolution * resolution; ++i)
+}
+
+void TerrainGenerator::setVectorsAndBuffers()
+{
+    int stride = 9;
+    m_Vertices.resize(m_VerticesVec3.size() * 9);
+    
+    for(int i = 0; i < m_VerticesVec3.size(); ++i)
     {
-        m_Vertices[stride + (i * 9)] = vertex_normals_average[i].x;
-        m_Vertices[stride + (i * 9) + 1] = vertex_normals_average[i].y;
-        m_Vertices[stride + (i * 9) + 2] = vertex_normals_average[i].z;
+        m_Vertices[(i * stride)] = m_VerticesVec3[i].x;
+        m_Vertices[(i * stride)+1] = m_VerticesVec3[i].y;
+        m_Vertices[(i * stride)+2] = m_VerticesVec3[i].z;
+
+        m_Vertices[(i * stride)+3] = m_VertexColorsVec3[i].x;
+        m_Vertices[(i * stride)+4] = m_VertexColorsVec3[i].y;
+        m_Vertices[(i * stride)+5] = m_VertexColorsVec3[i].z;
+
+        m_Vertices[(i * stride)+6] = m_VertexNormals[i].x;
+        m_Vertices[(i * stride)+7] = m_VertexNormals[i].y;
+        m_Vertices[(i * stride)+8] = m_VertexNormals[i].z;
     }
+
+    for (glm::vec3 triangle : m_Triangles)
+    {
+        m_Indices.push_back((uint32_t)(triangle.x));
+        m_Indices.push_back((uint32_t)(triangle.y));
+        m_Indices.push_back((uint32_t)(triangle.z));
+    }
+
+
 }

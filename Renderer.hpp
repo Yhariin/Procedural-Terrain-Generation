@@ -23,12 +23,12 @@ class Renderer
     private:
         TerrainGenerator m_TerrainGenerator;
         Camera m_Camera;
-        Shader m_shader;
-        VertexArray m_vao;
-        VertexBuffer m_vbo;
-        IndexBuffer m_ibo;
+        Shader m_Shader;
+        VertexArray m_Vao;
+        VertexBuffer m_Vbo;
+        IndexBuffer m_Ibo;
 
-        uint32_t m_width, m_height;
+        uint32_t m_Width, m_Height;
 
 
         void UpdateCamera(Shader& shader);

@@ -4,9 +4,9 @@ WindowProperties Window::m_WindowProperties;
 
 GLFWwindow* Window::m_Handle = nullptr;
 
-float Window::m_currentFrameTime = 0.f;
-float Window::m_deltaTime = 0.f;
-float Window::m_lastFrameTime = 0.f;
+float Window::m_CurrentFrameTime = 0.f;
+float Window::m_DeltaTime = 0.f;
+float Window::m_LastFrameTime = 0.f;
 
 void Window::Init_Window(const std::string& title, uint32_t width, uint32_t height, uint32_t posX, uint32_t posY)
 {
@@ -69,10 +69,10 @@ void Window::WindowLoop()
     while(!glfwWindowShouldClose(m_Handle))
     {
 
-        Window::m_currentFrameTime = (float)glfwGetTime();
-        m_deltaTime = m_currentFrameTime - m_lastFrameTime;
+        Window::m_CurrentFrameTime = (float)glfwGetTime();
+        m_DeltaTime = m_CurrentFrameTime - m_LastFrameTime;
         
-        m_lastFrameTime = m_currentFrameTime;
+        m_LastFrameTime = m_CurrentFrameTime;
 
         //TODO: Add FPS calculations here...
 
@@ -174,17 +174,17 @@ void Window::ProcessInputs(Camera& camera)
     if (glfwGetKey(m_Handle, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(m_Handle, true);
     if (glfwGetKey(m_Handle, GLFW_KEY_W) == GLFW_PRESS)
-        camera.ProcessKeyboard(FORWARD, m_deltaTime);
+        camera.ProcessKeyboard(FORWARD, m_DeltaTime);
     if (glfwGetKey(m_Handle, GLFW_KEY_S) == GLFW_PRESS)
-        camera.ProcessKeyboard(BACKWARD, m_deltaTime);
+        camera.ProcessKeyboard(BACKWARD, m_DeltaTime);
     if (glfwGetKey(m_Handle, GLFW_KEY_A) == GLFW_PRESS)
-        camera.ProcessKeyboard(LEFT, m_deltaTime);
+        camera.ProcessKeyboard(LEFT, m_DeltaTime);
     if (glfwGetKey(m_Handle, GLFW_KEY_D) == GLFW_PRESS)
-        camera.ProcessKeyboard(RIGHT, m_deltaTime);
+        camera.ProcessKeyboard(RIGHT, m_DeltaTime);
     if (glfwGetKey(m_Handle, GLFW_KEY_SPACE) == GLFW_PRESS)
-        camera.ProcessKeyboard(UP, m_deltaTime);
+        camera.ProcessKeyboard(UP, m_DeltaTime);
     if (glfwGetKey(m_Handle, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-        camera.ProcessKeyboard(DOWN, m_deltaTime);
+        camera.ProcessKeyboard(DOWN, m_DeltaTime);
 
 }
 

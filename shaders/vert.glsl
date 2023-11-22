@@ -5,14 +5,17 @@ layout (location = 1) in vec3 vCol;
 layout (location = 2) in vec3 vNorm;
 
 out vec3 color;
-out vec3 newNorm;
+out vec3 norm;
 
-uniform mat4 MVP;
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
 
 void main()
 {
-    newNorm = normalize(vNorm);
-    gl_Position = MVP * vec4(vPos, 1.0);
-    // gl_Position = vec4(vPos, 1.0);
+    norm = mat3(transpose(inverse(model))) * vNorm;
+    
+    gl_Position = projection * view * model * vec4(vPos, 1.0);
+
     color = vCol;
 }

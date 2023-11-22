@@ -1,7 +1,7 @@
 #version 330 core 
 
 in vec3 color;
-in vec3 newNorm;
+in vec3 norm;
 
 out vec4 fragColor;
 
@@ -19,10 +19,10 @@ struct Light
 
 void main()
 {
+    vec3 lightDirection = normalize(-light_direction);
     
-    vec3 color_diffuse = color * clamp(dot(newNorm, normalize(light_direction)), 0, 1);
+    vec3 color_diffuse = color * clamp(dot(norm, normalize(lightDirection)), 0, 1);
 
-    // fragColor = vec4(color_diffuse, 1.0);
-    fragColor = vec4(newNorm, 1.0);
-    // fragColor = vec4(MVP[0][3], MVP[1][3], MVP[2][3], 1.0);
+    fragColor = vec4(color_diffuse, 1.0);
+    // fragColor = vec4(norm, 1.0);
 }
