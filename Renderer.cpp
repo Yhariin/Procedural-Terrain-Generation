@@ -68,7 +68,6 @@ void Renderer::Update()
     // Order of matrix multiplication is reversed (read from right to left)
     // When creating the transformation matrix do, scaling -> rotations -> transformations
     // clip_vector = projection_matrix * view_matrix * transformation_matrix * local_vector
-    glm::mat4 mvp =  p * v * m;
 
     m_Shader.setMat4fv("model", m);
     m_Shader.setMat4fv("view", v);
@@ -77,9 +76,6 @@ void Renderer::Update()
     m_Shader.setVec3f("light_direction", glm::normalize(glm::vec3(0.0, -1.0, 0.0)));
 
     // Lighting
-
-    glm::vec3 lightPos(0.f, 10.f, 0.f);
-
 
 }
 

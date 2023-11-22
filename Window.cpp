@@ -114,8 +114,6 @@ void Window::key_callback(GLFWwindow* window, int key, int scancode, int action,
         glfwSetWindowShouldClose(window, GLFW_TRUE);
     if (key == GLFW_KEY_F11 && action == GLFW_PRESS)
     {
-        GLFWmonitor *monitor = glfwGetPrimaryMonitor();
-        const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 
         if(m_WindowProperties.isFullscreen)
         {
