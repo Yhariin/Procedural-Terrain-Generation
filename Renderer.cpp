@@ -1,13 +1,14 @@
 #include "Renderer.hpp"
 #include <iostream>
 
-Renderer::Renderer(uint32_t width, uint32_t height) : 
+Renderer::Renderer(GLFWwindow *window, uint32_t width, uint32_t height) : 
     m_TerrainGenerator(),
     m_Camera(glm::vec3(0.0f, 15.0f, 3.0f)), 
     m_Shader("shaders/vert.glsl", "shaders/frag.glsl"),
     m_Vao(),
     m_Vbo(m_TerrainGenerator.getVertices().data(), m_TerrainGenerator.getVertices().size() * sizeof(float)),
     m_Ibo(m_TerrainGenerator.getIndices().data(), m_TerrainGenerator.getIndices().size()),
+    m_Gui(window),
     m_Width(width),
     m_Height(height)
 {
@@ -31,6 +32,8 @@ void Renderer::Draw()
     // glDisable(GL_PRIMITIVE_RESTART);
 
     glDrawElements(GL_TRIANGLES, m_Ibo.GetCount(), GL_UNSIGNED_INT, nullptr);
+
+    m_Gui.Render();
 }
 
 void Renderer::Draw(const VertexArray& va, const IndexBuffer& ib, Shader& shader)
@@ -75,6 +78,7 @@ void Renderer::Update()
     // m_Shader.setVec3f("light_direction", m_Camera.Front);
     m_Shader.setVec3f("light_direction", glm::normalize(glm::vec3(0.0, -1.0, 0.0)));
 
+    m_Gui.Update();
     // Lighting
 
 }

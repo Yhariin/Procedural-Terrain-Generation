@@ -7,8 +7,10 @@
 class Gui
 {
     public:
-        Gui();
+        Gui(GLFWwindow *window);
         ~Gui();
+        void Update();
+        void Render();
 
     private:
 

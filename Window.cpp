@@ -12,8 +12,9 @@ void Window::Init_Window(const std::string& title, uint32_t width, uint32_t heig
 {
     WindowProperties m_WindowProperties(title, width, height, posX, posY);
 
-    m_WindowProperties.isFullscreen = false;
+    m_WindowProperties.fullscreenEnabled = false;
     m_WindowProperties.wireframeEnabled = false;
+    m_WindowProperties.guiEnabled = false;
 
     glfwSetErrorCallback(error_callback);
 
@@ -63,7 +64,7 @@ void Window::Init_Window(const std::string& title, uint32_t width, uint32_t heig
 
 void Window::WindowLoop()
 {
-    Renderer renderer(m_WindowProperties.Width, m_WindowProperties.Height);
+    Renderer renderer(m_Handle, m_WindowProperties.Width, m_WindowProperties.Height);
     Camera &camera = renderer.getCamera();
 
     while(!glfwWindowShouldClose(m_Handle))
@@ -85,7 +86,8 @@ void Window::WindowLoop()
         renderer.Draw();
 
         ProcessInputs(camera);
-        ProcessMouse(camera);
+        if(!m_WindowProperties.guiEnabled)
+            ProcessMouse(camera);
 
         glfwSwapBuffers(m_Handle);
         glfwPollEvents();
@@ -112,18 +114,19 @@ void Window::key_callback(GLFWwindow* window, int key, int scancode, int action,
 {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GLFW_TRUE);
-    if (key == GLFW_KEY_F11 && action == GLFW_PRESS)
+    if (key == GLFW_KEY_F1 && action == GLFW_PRESS)
     {
-
-        if(m_WindowProperties.isFullscreen)
+        if(m_WindowProperties.guiEnabled)
         {
-                glfwRestoreWindow(m_Handle);
-                m_WindowProperties.isFullscreen = false;
+            // Toggle off
+            glfwSetInputMode(m_Handle, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            m_WindowProperties.guiEnabled = false;
         }
         else
         {
-                glfwMaximizeWindow(m_Handle);
-                m_WindowProperties.isFullscreen = true;
+            // Toggle on
+            glfwSetInputMode(m_Handle, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            m_WindowProperties.guiEnabled = true;
         }
 
     }
@@ -131,13 +134,32 @@ void Window::key_callback(GLFWwindow* window, int key, int scancode, int action,
     {
         if(m_WindowProperties.wireframeEnabled)
         {
+            // Toggle off
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
             m_WindowProperties.wireframeEnabled = false;
         }
         else
         {
+            // Toggle on
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
             m_WindowProperties.wireframeEnabled = true;
+        }
+
+    }
+    if (key == GLFW_KEY_F11 && action == GLFW_PRESS)
+    {
+
+        if(m_WindowProperties.fullscreenEnabled)
+        {
+            // Toggle off
+            glfwRestoreWindow(m_Handle);
+            m_WindowProperties.fullscreenEnabled = false;
+        }
+        else
+        {
+            // Toggle on
+            glfwMaximizeWindow(m_Handle);
+            m_WindowProperties.fullscreenEnabled = true;
         }
 
     }

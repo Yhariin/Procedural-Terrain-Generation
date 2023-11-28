@@ -7,11 +7,12 @@
 #include "Camera.hpp"
 #include "TerrainGenerator.hpp"
 #include "Utils.hpp"
+#include "Gui.hpp"
 
 class Renderer
 {
     public:
-        Renderer(uint32_t width, uint32_t height);
+        Renderer(GLFWwindow *window, uint32_t width, uint32_t height);
         ~Renderer();
         void Draw();
         void Draw(const VertexArray& va, const IndexBuffer& ib, Shader& shader);
@@ -27,6 +28,7 @@ class Renderer
         VertexArray m_Vao;
         VertexBuffer m_Vbo;
         IndexBuffer m_Ibo;
+        Gui m_Gui;
 
         uint32_t m_Width, m_Height;
 
