@@ -8,6 +8,7 @@
 #include "TerrainGenerator.hpp"
 #include "Utils.hpp"
 #include "Gui.hpp"
+#include "WindowProperties.hpp"
 
 class Renderer
 {
@@ -17,7 +18,7 @@ class Renderer
         void Draw();
         void Draw(const VertexArray& va, const IndexBuffer& ib, Shader& shader);
         void Clear() const;
-        void Update();
+        void Update(WindowProperties &windowProperties);
 
         Camera& getCamera() { return m_Camera; }
 
@@ -29,6 +30,7 @@ class Renderer
         VertexBuffer m_Vbo;
         IndexBuffer m_Ibo;
         Gui m_Gui;
+        WindowProperties m_WindowProperties;
 
         uint32_t m_Width, m_Height;
 

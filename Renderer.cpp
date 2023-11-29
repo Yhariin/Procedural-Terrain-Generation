@@ -1,6 +1,8 @@
 #include "Renderer.hpp"
 #include <iostream>
 
+float color [3];
+
 Renderer::Renderer(GLFWwindow *window, uint32_t width, uint32_t height) : 
     m_TerrainGenerator(),
     m_Camera(glm::vec3(0.0f, 15.0f, 3.0f)), 
@@ -33,7 +35,8 @@ void Renderer::Draw()
 
     glDrawElements(GL_TRIANGLES, m_Ibo.GetCount(), GL_UNSIGNED_INT, nullptr);
 
-    m_Gui.Render();
+    if(m_WindowProperties.guiEnabled)
+        m_Gui.Render();
 }
 
 void Renderer::Draw(const VertexArray& va, const IndexBuffer& ib, Shader& shader)
@@ -51,8 +54,9 @@ void Renderer::Clear() const
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void Renderer::Update()
+void Renderer::Update(WindowProperties &windowProperties)
 {
+    m_WindowProperties = windowProperties;
     m_Shader.Bind();
 
     float ratio = (float)m_Width / (float)m_Height;
@@ -78,14 +82,22 @@ void Renderer::Update()
     // m_Shader.setVec3f("light_direction", m_Camera.Front);
     m_Shader.setVec3f("light_direction", glm::normalize(glm::vec3(0.0, -1.0, 0.0)));
 
-    m_Gui.Update();
+    glm::vec3 colorVec = m_TerrainGenerator.getColor();
+
+    if(m_WindowProperties.guiEnabled)
+        m_Gui.Update(m_Camera, color);
+
+
+    colorVec.x = color[0];
+    colorVec.y = color[1];
+    colorVec.z = color[2];
+
     // Lighting
 
 }
 
 void Renderer::UpdateCamera(Shader& shader)
 {
-
     glm::mat4 view = m_Camera.GetViewMatrix();
 
     shader.setMat4fv("MVP", view);

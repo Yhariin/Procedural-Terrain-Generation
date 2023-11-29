@@ -81,7 +81,7 @@ void Window::WindowLoop()
 
         renderer.Clear();
 
-        renderer.Update();
+        renderer.Update(m_WindowProperties);
 
         renderer.Draw();
 
@@ -145,6 +145,9 @@ void Window::key_callback(GLFWwindow* window, int key, int scancode, int action,
             m_WindowProperties.wireframeEnabled = true;
         }
 
+    }
+    if (key == GLFW_KEY_F3 && action == GLFW_PRESS)
+    {
     }
     if (key == GLFW_KEY_F11 && action == GLFW_PRESS)
     {
@@ -229,6 +232,6 @@ void Window::ProcessMouse(Camera& camera)
     camera.lastX = xpos;
     camera.lastY = ypos;
 
-    camera.ProcessMouseMovement(xoffset, yoffset);
+    camera.ProcessMouseMovement(xoffset, yoffset, true);
 
 }

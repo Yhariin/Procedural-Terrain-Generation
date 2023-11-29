@@ -70,7 +70,18 @@ class Camera
         void ProcessMouseMovement(float x_offset, float y_offset, bool constrainPitch = true);
 
         void ProcessMouseScroll(float y_offset);
+
+        float &getSpeed() { return m_Speed; }
+        float &getSensitivity() { return m_Sensitivity; }
+
+        void SetSpeed(float speed) { m_Speed = speed; }
+        void setSensitivity(float sensitivity) { m_Sensitivity = sensitivity; }
             
     private:
         void updateCameraVectors();
+        float m_Yaw = -90.f;
+        float m_Pitch = 0.0f;
+        float m_Speed = 12.5f;
+        float m_Sensitivity = 0.1f;
+        float m_Zoom = 45.0f;
 };

@@ -36,6 +36,10 @@ class TerrainGenerator
         std::vector<uint32_t> getIndices() const { return m_Indices; }
         VertexProperties getVertexProperties() const {return m_VertexProperties; }
         VertexBufferLayout getVertexBufferLayout() const {return m_VertexBufferLayout; }
+
+        void setColor(glm::vec3 color) { m_Color = color; }
+        void setColor(float *color) {m_Color.x = color[0]; m_Color.y = color[1]; m_Color.z = color[2]; }
+        glm::vec3 &getColor() { return m_Color; }
     private:
         std::vector<float> m_Vertices; 
         std::vector<glm::vec3> m_VerticesVec3;
@@ -51,9 +55,10 @@ class TerrainGenerator
         VertexProperties m_VertexProperties;
         VertexBufferLayout m_VertexBufferLayout;
 
+        glm::vec3 m_Color = glm::vec3(0.3f, 0.3f, 0.3f);
 
         void computeVertexProperties(VertexProperties &VertexProperties, std::vector<float> &vertices);
-        void GenerateChunk(int resolution);
+        void GenerateChunk(int resolution, glm::vec3 color);
         void prepareVectors();
         void setVectorsAndBuffers();
 

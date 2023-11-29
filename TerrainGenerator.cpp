@@ -24,7 +24,7 @@ void TerrainGenerator::computeVertexProperties(VertexProperties &vertexPropertie
 TerrainGenerator::TerrainGenerator() 
 {
     
-    GenerateChunk(64);
+    GenerateChunk(64, m_Color);
 
     computeVertexProperties(m_VertexProperties, m_Vertices);
     m_VertexBufferLayout.Push<float>(m_VertexProperties.size_pos);
@@ -37,7 +37,7 @@ TerrainGenerator::~TerrainGenerator()
 
 }
 
-void TerrainGenerator::GenerateChunk(int resolution)
+void TerrainGenerator::GenerateChunk(int resolution, glm::vec3 color)
 {
     m_VerticesVec3.reserve(resolution * resolution);
     float spacing = 1.0;
@@ -53,6 +53,7 @@ void TerrainGenerator::GenerateChunk(int resolution)
             float z = r;
             // float y = glm::linearRand(0.f, peak);
             float y = glm::perlin(glm::vec2(x * 0.2, z * 0.2)) * peak;
+            // float y = 0.f;
 
             float normY = y / peak;
 
