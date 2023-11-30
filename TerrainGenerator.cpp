@@ -1,6 +1,21 @@
 #include "TerrainGenerator.hpp"
 #include <iostream>
 
+TerrainGenerator::TerrainGenerator(TerrainProperties &terrainProperties) 
+{
+    
+    GenerateChunk(64, terrainProperties);
+
+    computeVertexProperties(m_VertexProperties, m_Vertices);
+    m_VertexBufferLayout.Push<float>(m_VertexProperties.size_pos);
+    m_VertexBufferLayout.Push<float>(m_VertexProperties.size_color);
+    m_VertexBufferLayout.Push<float>(m_VertexProperties.size_normal);
+}
+
+TerrainGenerator::~TerrainGenerator()
+{
+
+}
 
 void TerrainGenerator::computeVertexProperties(VertexProperties &vertexProperties, std::vector<float> &vertices)
 {
@@ -20,24 +35,7 @@ void TerrainGenerator::computeVertexProperties(VertexProperties &vertexPropertie
     vertexProperties.stride = (vertexProperties.size_pos + vertexProperties.size_color) * 4;
 }
 
-
-TerrainGenerator::TerrainGenerator() 
-{
-    
-    GenerateChunk(64, m_Color);
-
-    computeVertexProperties(m_VertexProperties, m_Vertices);
-    m_VertexBufferLayout.Push<float>(m_VertexProperties.size_pos);
-    m_VertexBufferLayout.Push<float>(m_VertexProperties.size_color);
-    m_VertexBufferLayout.Push<float>(m_VertexProperties.size_normal);
-}
-
-TerrainGenerator::~TerrainGenerator()
-{
-
-}
-
-void TerrainGenerator::GenerateChunk(int resolution, glm::vec3 color)
+void TerrainGenerator::GenerateChunk(int resolution, TerrainProperties &terrainProperties)
 {
     m_VerticesVec3.reserve(resolution * resolution);
     float spacing = 1.0;
@@ -62,7 +60,8 @@ void TerrainGenerator::GenerateChunk(int resolution, glm::vec3 color)
 
             // Vertex Colors
             // m_VertexColorsVec3.push_back(glm::vec3(normY * 0.5, normY * 0.25, normY));
-            m_VertexColorsVec3.push_back(glm::vec3(0.3, 0.3, 0.3));
+            // m_VertexColorsVec3.push_back(glm::vec3(0.3, 0.3, 0.3));
+            m_VertexColorsVec3.push_back(terrainProperties.colorVec);
 
             // Create a vector in the mapping
             // To keep track of all the triangles

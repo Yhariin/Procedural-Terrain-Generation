@@ -3,8 +3,8 @@
 
 float color [3];
 
-Renderer::Renderer(GLFWwindow *window, uint32_t width, uint32_t height) : 
-    m_TerrainGenerator(),
+Renderer::Renderer(GLFWwindow *window, TerrainProperties &terrainProperties, uint32_t width, uint32_t height) : 
+    m_TerrainGenerator(terrainProperties),
     m_Camera(glm::vec3(0.0f, 15.0f, 3.0f)), 
     m_Shader("shaders/vert.glsl", "shaders/frag.glsl"),
     m_Vao(),
@@ -54,7 +54,7 @@ void Renderer::Clear() const
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void Renderer::Update(WindowProperties &windowProperties)
+void Renderer::Update(WindowProperties &windowProperties, TerrainProperties &terrainProperties)
 {
     m_WindowProperties = windowProperties;
     m_Shader.Bind();
@@ -85,7 +85,7 @@ void Renderer::Update(WindowProperties &windowProperties)
     glm::vec3 colorVec = m_TerrainGenerator.getColor();
 
     if(m_WindowProperties.guiEnabled)
-        m_Gui.Update(m_Camera, color);
+        m_Gui.Update(m_Camera, terrainProperties);
 
 
     colorVec.x = color[0];

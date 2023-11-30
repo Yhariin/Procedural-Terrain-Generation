@@ -14,6 +14,7 @@ struct WindowProperties
     bool fullscreenEnabled;
     bool wireframeEnabled;
     bool guiEnabled;
+    bool reloadEnabled;
 
     uint32_t prevWidth;
     uint32_t prevHeight;

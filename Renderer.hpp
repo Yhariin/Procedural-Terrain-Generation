@@ -9,18 +9,20 @@
 #include "Utils.hpp"
 #include "Gui.hpp"
 #include "WindowProperties.hpp"
+#include "TerrainProperties.hpp"
+#include "CameraProperties.hpp"
 
 class Renderer
 {
     public:
-        Renderer(GLFWwindow *window, uint32_t width, uint32_t height);
+        Renderer(GLFWwindow *window, TerrainProperties &terrainProperties, uint32_t width, uint32_t height);
         ~Renderer();
         void Draw();
         void Draw(const VertexArray& va, const IndexBuffer& ib, Shader& shader);
         void Clear() const;
-        void Update(WindowProperties &windowProperties);
+        void Update(WindowProperties &windowProperties, TerrainProperties &terrainProperties);
 
-        Camera& getCamera() { return m_Camera; }
+        Camera* getCamera() { return &m_Camera; }
 
     private:
         TerrainGenerator m_TerrainGenerator;

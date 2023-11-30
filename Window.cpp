@@ -1,4 +1,5 @@
 #include "Window.hpp"
+#include "TerrainProperties.hpp"
 
 WindowProperties Window::m_WindowProperties;
 
@@ -15,6 +16,7 @@ void Window::Init_Window(const std::string& title, uint32_t width, uint32_t heig
     m_WindowProperties.fullscreenEnabled = false;
     m_WindowProperties.wireframeEnabled = false;
     m_WindowProperties.guiEnabled = false;
+    m_WindowProperties.reloadEnabled = false;
 
     glfwSetErrorCallback(error_callback);
 
@@ -64,8 +66,11 @@ void Window::Init_Window(const std::string& title, uint32_t width, uint32_t heig
 
 void Window::WindowLoop()
 {
-    Renderer renderer(m_Handle, m_WindowProperties.Width, m_WindowProperties.Height);
-    Camera &camera = renderer.getCamera();
+    static TerrainProperties terrainProperties;
+    Renderer* renderer;
+    Camera *camera;
+    renderer = new Renderer(m_Handle, terrainProperties, m_WindowProperties.Width, m_WindowProperties.Height);
+    camera = renderer->getCamera();
 
     while(!glfwWindowShouldClose(m_Handle))
     {
@@ -79,22 +84,33 @@ void Window::WindowLoop()
 
         glClearColor(0.2f, 0.2f, 0.5f, 1.f);
 
-        renderer.Clear();
+        renderer->Clear();
 
-        renderer.Update(m_WindowProperties);
+        renderer->Update(m_WindowProperties, terrainProperties);
 
-        renderer.Draw();
+        renderer->Draw();
 
-        ProcessInputs(camera);
+        ProcessInputs(*camera);
         if(!m_WindowProperties.guiEnabled)
-            ProcessMouse(camera);
+            ProcessMouse(*camera);
 
         glfwSwapBuffers(m_Handle);
         glfwPollEvents();
 
+        if(m_WindowProperties.reloadEnabled)
+        {
+            CameraProperties cameraProperties = camera->getCameraProperties();
+            delete renderer;
+            renderer = new Renderer(m_Handle, terrainProperties, m_WindowProperties.Width, m_WindowProperties.Height);
+            camera = renderer->getCamera();
+            camera->setCameraProperties(cameraProperties);
+            m_WindowProperties.reloadEnabled = false;
+        }
 
 
     }
+
+    delete renderer;
 
 }
 
@@ -148,6 +164,7 @@ void Window::key_callback(GLFWwindow* window, int key, int scancode, int action,
     }
     if (key == GLFW_KEY_F3 && action == GLFW_PRESS)
     {
+        m_WindowProperties.reloadEnabled = true;
     }
     if (key == GLFW_KEY_F11 && action == GLFW_PRESS)
     {

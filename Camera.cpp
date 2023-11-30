@@ -102,3 +102,51 @@ void Camera::updateCameraVectors()
     Right = glm::normalize(glm::cross(Front, WorldUp));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
     Up    = glm::normalize(glm::cross(Right, Front));
 }
+
+
+CameraProperties Camera::getCameraProperties()
+{
+    CameraProperties cameraProperties;
+
+    cameraProperties.firstMouse = firstMouse;
+    cameraProperties.lastX = lastX;
+    cameraProperties.lastY = lastY;
+    cameraProperties.fov = fov;
+
+    cameraProperties.Position = Position;
+    cameraProperties.Front = Front;
+    cameraProperties.Up = Up;
+    cameraProperties.Right = Right;
+    cameraProperties.WorldUp = WorldUp;
+
+    cameraProperties.Yaw = Yaw;
+    cameraProperties.Pitch = Pitch;
+
+    cameraProperties.m_Speed = m_Speed;
+    cameraProperties.MouseSensitivity = MouseSensitivity;
+    cameraProperties.Zoom = Zoom;
+
+    return cameraProperties;
+}
+
+void Camera::setCameraProperties(CameraProperties &cameraProperties)
+{
+    firstMouse = cameraProperties.firstMouse;
+    lastX = cameraProperties.lastX;
+    lastY = cameraProperties.lastY;
+    fov = cameraProperties.fov;
+
+    Position = cameraProperties.Position;
+    Front = cameraProperties.Front;
+    Up = cameraProperties.Up;
+    Right = cameraProperties.Right;
+    WorldUp = cameraProperties.WorldUp;
+
+    Yaw = cameraProperties.Yaw;
+    Pitch = cameraProperties.Pitch;
+
+    m_Speed = cameraProperties.m_Speed;
+    MouseSensitivity = cameraProperties.MouseSensitivity;
+    Zoom = cameraProperties.Zoom;
+
+}

@@ -4,6 +4,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "CameraProperties.hpp"
+
 #include <vector>
 
 enum Camera_Movement
@@ -77,6 +79,8 @@ class Camera
         void SetSpeed(float speed) { m_Speed = speed; }
         void setSensitivity(float sensitivity) { m_Sensitivity = sensitivity; }
             
+        CameraProperties getCameraProperties();
+        void setCameraProperties(CameraProperties &cameraProperties);
     private:
         void updateCameraVectors();
         float m_Yaw = -90.f;

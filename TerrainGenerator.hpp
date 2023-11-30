@@ -5,11 +5,14 @@
 #include "glm/gtc/noise.hpp"
 #include "VertexBufferLayout.hpp"
 #include "Utils.hpp"
+#include "TerrainProperties.hpp"
+
 #include <vector>
 #include <map>
 #include <list>
 
-typedef struct VertexProperties {
+typedef struct VertexProperties 
+{
     std::vector<float> obj;
     int obj_count;
 
@@ -25,10 +28,11 @@ typedef struct VertexProperties {
     int stride;
 } VertexProperties;
 
+
 class TerrainGenerator
 {
     public:
-        TerrainGenerator();
+        TerrainGenerator(TerrainProperties &terrainProperties);
         ~TerrainGenerator();
 
         std::vector<float> getVertices() const { return m_Vertices; }
@@ -58,7 +62,7 @@ class TerrainGenerator
         glm::vec3 m_Color = glm::vec3(0.3f, 0.3f, 0.3f);
 
         void computeVertexProperties(VertexProperties &VertexProperties, std::vector<float> &vertices);
-        void GenerateChunk(int resolution, glm::vec3 color);
+        void GenerateChunk(int resolution, TerrainProperties &TerrainProperties);
         void prepareVectors();
         void setVectorsAndBuffers();
 

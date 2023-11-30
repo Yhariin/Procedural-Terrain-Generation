@@ -22,7 +22,7 @@ Gui::~Gui()
     ImGui::DestroyContext();
 }
 
-void Gui::Update(Camera &camera, float *color)
+void Gui::Update(Camera &camera, TerrainProperties &terrainProperties)
 {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
@@ -36,7 +36,12 @@ void Gui::Update(Camera &camera, float *color)
 
     ImGui::Text("Terrain Settings");
 
-    ImGui::ColorPicker3("Terrain Color", color);
+    ImGui::ColorPicker3("Terrain Color", terrainProperties.color);
+
+    terrainProperties.colorVec.r = terrainProperties.color[0];
+    terrainProperties.colorVec.g = terrainProperties.color[1];
+    terrainProperties.colorVec.b = terrainProperties.color[2];
+
     ImGui::Text("HELLO");
 
     ImGui::End();
