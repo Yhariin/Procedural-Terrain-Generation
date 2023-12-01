@@ -1,10 +1,12 @@
 #include "TerrainGenerator.hpp"
 #include <iostream>
+#include <random>
+#include <cstdlib>
 
 TerrainGenerator::TerrainGenerator(TerrainProperties &terrainProperties) 
 {
     
-    GenerateChunk(64, terrainProperties);
+    GenerateChunk(terrainProperties.resolution, terrainProperties);
 
     computeVertexProperties(m_VertexProperties, m_Vertices);
     m_VertexBufferLayout.Push<float>(m_VertexProperties.size_pos);
@@ -37,23 +39,64 @@ void TerrainGenerator::computeVertexProperties(VertexProperties &vertexPropertie
 
 void TerrainGenerator::GenerateChunk(int resolution, TerrainProperties &terrainProperties)
 {
+    srand(terrainProperties.seed);
+    std::mt19937 gen(terrainProperties.seed);
+    std::uniform_int_distribution<> distr(-10000, 10000);
+
+    glm::vec2 octaveOffsets[terrainProperties.octaves];
+    for(int i = 0; i < terrainProperties.octaves; ++i)
+    {
+        float offsetX = distr(gen);
+        float offsetY = distr(gen);
+
+        octaveOffsets[i] = glm::vec2(offsetX, offsetY);
+    }
+
     m_VerticesVec3.reserve(resolution * resolution);
-    float spacing = 1.0;
+    float spacing = 1.f / (float(resolution) / 64.f);
     float peak = 5.f;
 
     // Rows
+    float yOff = 0;
     for(int r = 0; r < resolution; ++r)
     {
         // Columns
+        float xOff = 0;
         for(int c = 0; c < resolution; ++c)
         {
             float x = c;
             float z = r;
             // float y = glm::linearRand(0.f, peak);
-            float y = glm::perlin(glm::vec2(x * 0.2, z * 0.2)) * peak;
+
+            float amplitude = 1;
+            float frequency = 1;
+            float noiseHeight = 0;
+
+            float perlinValue;
+            for(int i = 0; i < terrainProperties.octaves; ++i)
+            {
+                // float sampleX = x / terrainProperties.scale * frequency + octaveOffsets[i].x;
+                // float sampleZ = z / terrainProperties.scale * frequency + octaveOffsets[i].y;
+
+                float sampleX = xOff * frequency + octaveOffsets[i].x;
+                float sampleZ = yOff * frequency + octaveOffsets[i].y;
+
+                perlinValue = glm::perlin(glm::vec2(sampleX, sampleZ));
+                noiseHeight += perlinValue * amplitude;
+
+                amplitude *= terrainProperties.persistance;
+                frequency *= terrainProperties.lacunarity;
+
+            }
+            xOff += terrainProperties.scale;
+
+            noiseHeight *= terrainProperties.height;
+            if(noiseHeight < 0.5f)
+                noiseHeight = 0.5f;
+            float y = noiseHeight;
             // float y = 0.f;
 
-            float normY = y / peak;
+            // float normY = y / peak;
 
             glm::vec3 v(x * spacing, y * spacing, z * spacing);
             m_VerticesVec3.emplace_back(v);
@@ -68,8 +111,8 @@ void TerrainGenerator::GenerateChunk(int resolution, TerrainProperties &terrainP
             std::vector<int> triangles;
             m_VertexToTrianglesMap.emplace(m_VerticesVec3.size() - 1, triangles);
 
-
         }
+        yOff += terrainProperties.scale;
     }
 
     // Generate Faces

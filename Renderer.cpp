@@ -80,7 +80,8 @@ void Renderer::Update(WindowProperties &windowProperties, TerrainProperties &ter
     m_Shader.setMat4fv("view", v);
     m_Shader.setMat4fv("projection", p);
     // m_Shader.setVec3f("light_direction", m_Camera.Front);
-    m_Shader.setVec3f("light_direction", glm::normalize(glm::vec3(0.0, -1.0, 0.0)));
+    m_Shader.setVec3f("light_direction", glm::normalize(terrainProperties.lightDirectionVec));
+    // m_Shader.setVec3f("light_direction", glm::normalize(glm::vec3(0.0, -1.0, 0.0)));
 
     glm::vec3 colorVec = m_TerrainGenerator.getColor();
 

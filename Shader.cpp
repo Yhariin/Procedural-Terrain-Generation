@@ -82,7 +82,6 @@ GLuint Shader::CompileShader(GLuint type, const std::string &source)
     if(result == GL_FALSE)
     {
         int length;
-        GLint maxLength = 0;
         glGetShaderiv(shaderID, GL_INFO_LOG_LENGTH, &length);
         char* message = (char*)alloca(length * sizeof(char));
         glGetShaderInfoLog(shaderID, length, &length, message);

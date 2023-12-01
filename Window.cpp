@@ -66,7 +66,7 @@ void Window::Init_Window(const std::string& title, uint32_t width, uint32_t heig
 
 void Window::WindowLoop()
 {
-    static TerrainProperties terrainProperties;
+    TerrainProperties terrainProperties;
     Renderer* renderer;
     Camera *camera;
     renderer = new Renderer(m_Handle, terrainProperties, m_WindowProperties.Width, m_WindowProperties.Height);
@@ -82,7 +82,7 @@ void Window::WindowLoop()
 
         //TODO: Add FPS calculations here...
 
-        glClearColor(0.2f, 0.2f, 0.5f, 1.f);
+        glClearColor(0.0f, 0.0f, 0.0f, 1.f);
 
         renderer->Clear();
 

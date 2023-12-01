@@ -1,4 +1,6 @@
 #include "Gui.hpp"
+#include <string>
+#include <random>
 
 Gui::Gui(GLFWwindow *window)
 {
@@ -38,9 +40,28 @@ void Gui::Update(Camera &camera, TerrainProperties &terrainProperties)
 
     ImGui::ColorPicker3("Terrain Color", terrainProperties.color);
 
+    ImGui::SliderFloat("Scale", &terrainProperties.scale, 0.01f, 0.2f);
+    ImGui::SliderInt("Octaves", &terrainProperties.octaves, 1, 32);
+    ImGui::SliderFloat("Persistance", &terrainProperties.persistance, 0.01f, 1.0f);
+    ImGui::SliderFloat("Lacunarity", &terrainProperties.lacunarity, 0.01f, 5.0f);
+    ImGui::SliderFloat("Height", &terrainProperties.height, 1.0f, 25.f);
+    ImGui::SliderInt("Resolution", &terrainProperties.resolution, 3, 128);
+
+
+    std::string seedButton = "Randomize Seed " + std::to_string(terrainProperties.seed);
+    if(ImGui::Button(seedButton.c_str()))
+        terrainProperties.seed = rand();
+
+    ImGui::SliderFloat3("Light Direction", terrainProperties.lightDirection, -1.0f, 0.0f);
+
+
     terrainProperties.colorVec.r = terrainProperties.color[0];
     terrainProperties.colorVec.g = terrainProperties.color[1];
     terrainProperties.colorVec.b = terrainProperties.color[2];
+
+    terrainProperties.lightDirectionVec.x = terrainProperties.lightDirection[0];
+    terrainProperties.lightDirectionVec.y = terrainProperties.lightDirection[1];
+    terrainProperties.lightDirectionVec.z = terrainProperties.lightDirection[2];
 
     ImGui::Text("HELLO");
 
