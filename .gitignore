@@ -44,4 +44,4 @@ build/*
 .history/
 
 # imgui
-imgui.init
+imgui.ini
