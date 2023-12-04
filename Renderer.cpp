@@ -5,7 +5,7 @@ float color [3];
 
 Renderer::Renderer(GLFWwindow *window, TerrainProperties &terrainProperties, uint32_t width, uint32_t height) : 
     m_TerrainGenerator(terrainProperties),
-    m_Camera(glm::vec3(0.0f, 15.0f, 3.0f)), 
+    m_Camera(glm::vec3(0.0f, 35.0f, 40.0f)), 
     m_Shader("shaders/vert.glsl", "shaders/frag.glsl"),
     m_Vao(),
     m_Vbo(m_TerrainGenerator.getVertices().data(), m_TerrainGenerator.getVertices().size() * sizeof(float)),
@@ -15,6 +15,7 @@ Renderer::Renderer(GLFWwindow *window, TerrainProperties &terrainProperties, uin
     m_Height(height)
 {
     m_Vao.AddBuffer(m_Vbo, m_TerrainGenerator.getVertexBufferLayout());
+
 }
 
 Renderer::~Renderer()
@@ -60,6 +61,8 @@ void Renderer::Update(WindowProperties &windowProperties, TerrainProperties &ter
     m_Shader.Bind();
 
     float ratio = (float)m_Width / (float)m_Height;
+
+
     //upate any uniforms and matrices
     glm::mat4 m(1.0f);
     glm::mat4 v(1.0f);
@@ -69,7 +72,7 @@ void Renderer::Update(WindowProperties &windowProperties, TerrainProperties &ter
     m = glm::translate(m, glm::vec3(-32.f, 0.f, -32.f));
     v = m_Camera.GetViewMatrix();
     // p = glm::ortho(-ratio, ratio, -1.f, 1.f, 1.f, -1.f);
-    p = glm::perspective(glm::radians(45.f), ratio, 0.1f, 100.0f);
+    p = glm::perspective(glm::radians(45.f), ratio, 0.1f, 500.0f);
     // p = glm::perspective(glm::radians(m_Camera.Zoom), ratio, 0.1f, 100.0f);
 
     // Order of matrix multiplication is reversed (read from right to left)

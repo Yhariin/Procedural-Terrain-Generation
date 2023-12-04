@@ -85,7 +85,7 @@ class Camera
         void updateCameraVectors();
         float m_Yaw = -90.f;
         float m_Pitch = 0.0f;
-        float m_Speed = 12.5f;
+        float m_Speed = 50.0f;
         float m_Sensitivity = 0.1f;
         float m_Zoom = 45.0f;
 };

@@ -5,6 +5,12 @@
 
 struct TerrainProperties
 {
+    enum 
+    {
+        PERLIN,
+        SIMPLEX
+    };
+
     TerrainProperties()
     {
         color[0] = 0.2f;
@@ -13,21 +19,27 @@ struct TerrainProperties
 
         colorVec = glm::vec3(0.2f, 0.2f, 0.2f);
 
-        scale = 0.05f;
-        octaves = 4;
-        persistance = 0.88f;
-        lacunarity = 1.65f;
-        height = 10.0f;
+        scale = 700.f;
+        octaves = 16;
+        persistance = 0.6f;
+        lacunarity = 1.85f;
+        height = 100.0f;
+        floor = 0.0f;
 
+        srand(time(0));
         seed = rand();
 
-        resolution = 128;
+        resolution = 256;
+        noiseType = 0;
 
         lightDirection[0] = 0.0f;
         lightDirection[1] = -1.0f;
-        lightDirection[2] = 0.0f;
+        lightDirection[2] = -1.0f;
 
-        lightDirectionVec = glm::vec3(0.0f, -1.0f, 0.0f);
+        lightDirectionVec = glm::vec3(0.0f, -1.0f, -1.0f);
+
+
+        preset = 0;
     }
 
     float color[3];
@@ -43,7 +55,10 @@ struct TerrainProperties
     float persistance;
     float lacunarity;
     float height;
+    float floor;
 
     int resolution;
+    int noiseType;
 
+    int preset;
 };

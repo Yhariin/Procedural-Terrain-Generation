@@ -66,7 +66,9 @@ void TerrainGenerator::GenerateChunk(int resolution, TerrainProperties &terrainP
         {
             float x = c;
             float z = r;
-            // float y = glm::linearRand(0.f, peak);
+
+            float xs = x / terrainProperties.scale;
+            float zs = z / terrainProperties.scale;
 
             float amplitude = 1;
             float frequency = 1;
@@ -78,21 +80,34 @@ void TerrainGenerator::GenerateChunk(int resolution, TerrainProperties &terrainP
                 // float sampleX = x / terrainProperties.scale * frequency + octaveOffsets[i].x;
                 // float sampleZ = z / terrainProperties.scale * frequency + octaveOffsets[i].y;
 
-                float sampleX = xOff * frequency + octaveOffsets[i].x;
-                float sampleZ = yOff * frequency + octaveOffsets[i].y;
+                float sampleX = xs * frequency + octaveOffsets[i].x;
+                float sampleZ = zs * frequency + octaveOffsets[i].y;
 
-                perlinValue = glm::perlin(glm::vec2(sampleX, sampleZ));
+                switch (terrainProperties.noiseType)
+                {
+                case 0:
+                    perlinValue = glm::perlin(glm::vec2(sampleX, sampleZ));
+                    break;
+                case 1:
+                    perlinValue = glm::simplex(glm::vec2(sampleX, sampleZ));
+                    break;
+                }
+                
                 noiseHeight += perlinValue * amplitude;
 
-                amplitude *= terrainProperties.persistance;
-                frequency *= terrainProperties.lacunarity;
+                // amplitude *= terrainProperties.persistance;
+                amplitude = pow(terrainProperties.persistance, i);
+                frequency = pow(terrainProperties.lacunarity, i);
+                // frequency *= terrainProperties.lacunarity;
 
             }
             xOff += terrainProperties.scale;
 
             noiseHeight *= terrainProperties.height;
-            if(noiseHeight < 0.5f)
-                noiseHeight = 0.5f;
+
+            if(noiseHeight < terrainProperties.floor && terrainProperties.floor != 0.f)
+                noiseHeight = terrainProperties.floor;
+
             float y = noiseHeight;
             // float y = 0.f;
 

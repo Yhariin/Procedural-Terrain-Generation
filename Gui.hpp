@@ -26,5 +26,7 @@ class Gui
         
         ModifiableValues m_ModifiableValues;
 
+        void setTerrainPreset(TerrainProperties &terrainProperties);
+
 
 };

@@ -82,7 +82,7 @@ void Window::WindowLoop()
 
         //TODO: Add FPS calculations here...
 
-        glClearColor(0.0f, 0.0f, 0.0f, 1.f);
+        glClearColor(0.1f, 0.1f, 0.1f, 1.f);
 
         renderer->Clear();
 
