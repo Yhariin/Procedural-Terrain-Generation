@@ -56,7 +56,7 @@ void Gui::Update(Camera &camera, TerrainProperties &terrainProperties)
     if(ImGui::Button(seedButton.c_str()))
         terrainProperties.seed = rand();
 
-    ImGui::SliderFloat3("Light Direction", terrainProperties.lightDirection, -1.0f, 0.0f);
+    ImGui::SliderFloat3("Light Direction", terrainProperties.lightDirection, -1.0f, 1.0f);
 
     terrainProperties.colorVec.r = terrainProperties.color[0];
     terrainProperties.colorVec.g = terrainProperties.color[1];
