@@ -151,6 +151,12 @@ void Gui::setTerrainPreset(TerrainProperties &terrainProperties)
         terrainProperties.resolution = 512;
         terrainProperties.seed = 27339;
         terrainProperties.noiseType = terrainProperties.SIMPLEX;
+
+        terrainProperties.colorVec = glm::vec3(219.f/255.f, 154.f/255.f, 89.f/255.f);
+        terrainProperties.color[0] = 219.f/255.f;
+        terrainProperties.color[1] = 154.f/255.f;
+        terrainProperties.color[2] = 89.f/255.f;
+
         break;
     case 5:
         terrainProperties.scale = 700;
