@@ -10,6 +10,10 @@
 #include <vector>
 #include <map>
 #include <list>
+#include <thread>
+#include <future>
+#include <mutex>
+#include <atomic>
 
 typedef struct VertexProperties 
 {
@@ -45,6 +49,11 @@ class TerrainGenerator
         void setColor(float *color) {m_Color.x = color[0]; m_Color.y = color[1]; m_Color.z = color[2]; }
         glm::vec3 &getColor() { return m_Color; }
     private:
+        std::vector<unsigned int> m_threadIndexVec;
+        std::mutex m_Mutex;
+        std::thread m_Thread;
+        std::atomic<unsigned int> m_IndexCounter;
+        std::future<void> m_Future;
         std::vector<float> m_Vertices; 
         std::vector<glm::vec3> m_VerticesVec3;
         std::vector<glm::vec3> m_VertexColorsVec3;
@@ -63,6 +72,8 @@ class TerrainGenerator
 
         void computeVertexProperties(VertexProperties &VertexProperties, std::vector<float> &vertices);
         void GenerateChunk(int resolution, TerrainProperties &TerrainProperties);
+        void GenerateChunkThreaded(int resolution, TerrainProperties &TerrainProperties);
+        void GenerateVertices(int threadNumber, uint16_t NUM_THREADS, int resolution, TerrainProperties &terrainProperties, std::vector<glm::vec2> &octaveOffsets);
         void prepareVectors();
         void setVectorsAndBuffers();
 
